@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4bcf1909-8996-44b7-be35-b130ab03d12f",
+		"_postman_id": "d96990c1-2f0f-4421-b9c2-27f936c460e6",
 		"name": "cloud-cdnd-c2-final",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -8,10 +8,26 @@
 		{
 			"name": "http://localhost:8082/filteredimage?image_url=https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImthbmdzYW4ubGVlQGdtYWlsLmNvbSIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkQm9VM05rYThnZ1p0SG5wcG1nNmdlTzZreGc2SGFnenpXcG5tejhMUmp0aFZQR09sTXZHWEsiLCJjcmVhdGVkQXQiOiIyMDIwLTA0LTE4VDA2OjIzOjExLjg3OFoiLCJ1cGRhdGVkQXQiOiIyMDIwLTA0LTE4VDA2OjIzOjExLjg3OFoifQ.xiUa4IGeFLTCE2poo2vxh19eusHIQeqGKfPQ7HLPTRI",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://{{HOST}}/filteredimage?image_url=https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg",
+					"raw": "http://{{HOST}}/filteredimage?image_url=https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/crayon.png",
 					"protocol": "http",
 					"host": [
 						"{{HOST}}"
@@ -22,8 +38,42 @@
 					"query": [
 						{
 							"key": "image_url",
-							"value": "https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg"
+							"value": "https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/crayon.png"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://{{HOST}}/api/v0/login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{HOST}}/api/v0/users/auth/login",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"api",
+						"v0",
+						"users",
+						"auth",
+						"login"
 					]
 				}
 			},
@@ -54,10 +104,11 @@
 	],
 	"variable": [
 		{
-			"id": "1df3d31a-de30-494b-a3d0-f1228dd8713c",
+			"id": "b20f99c0-dc13-43c1-b193-62fa06d0cf88",
 			"key": "HOST",
 			"value": "localhost:8082",
 			"type": "string"
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
