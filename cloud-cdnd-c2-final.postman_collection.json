@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "http://localhost:8082/filteredimage?image_url=https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg",
+			"name": "http://localhost:8082/filteredimage?image_url=https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-11/256/crayon.png",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -104,7 +104,7 @@
 	],
 	"variable": [
 		{
-			"id": "b20f99c0-dc13-43c1-b193-62fa06d0cf88",
+			"id": "c916c21a-dfaf-4af6-8533-d3e7bea35839",
 			"key": "HOST",
 			"value": "localhost:8082",
 			"type": "string"
