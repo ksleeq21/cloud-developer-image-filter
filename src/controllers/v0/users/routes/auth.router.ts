@@ -52,7 +52,6 @@ router.get('/verification',
 })
 
 router.post('/login', async (req: Request, res: Response) => {
-    console.log(req.body)
     const email = req.body.email
     const password = req.body.password
     // check email is valid
@@ -106,7 +105,6 @@ router.post('/', async (req: Request, res: Response) => {
     }
 
     const password_hash = await generatePassword(plainTextPassword)
-
     const newUser = await new User({
         email: email,
         password_hash: password_hash
