@@ -25,7 +25,7 @@ import { V0MODELS } from './controllers/v0/model.index'
       }
       try {
         const filePath = await filterImageFromURL(imageUrl)
-        res.status(200).sendFile(filePath)
+        return res.status(200).sendFile(filePath, () => deleteLocalFiles([filePath]))
       } catch (err) {
         console.log(err)
         return res.status(422).send(err.message)
