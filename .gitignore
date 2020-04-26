@@ -35,9 +35,9 @@ UserInterfaceState.xcuserstate
 node_modules
 venv/
 
-udacity-c3-deployment/k8s/aws-secret.yaml
-udacity-c3-deployment/k8s/env-secret.yaml
-udacity-c3-deployment/k8s/env-configmap.yaml
+udacity-c3-deployment/k8s/ignore-aws-secret.yaml
+udacity-c3-deployment/k8s/ignore-env-secret.yaml
+udacity-c3-deployment/k8s/ignore-env-configmap.yaml
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
