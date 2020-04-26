@@ -16,17 +16,6 @@ before_install:
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
-  - mkdir ~/.aws
-  - touch ~/.aws/credentials
-  - touch ~/.aws/config
-  - echo "[default]" >> ~/.aws/credentials
-  - echo "$AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
-  - echo "$AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
-  - echo "[default]" >> ~/.aws/config
-  - echo "output = json" >> ~/.aws/config
-  - echo "region = $REGION" >> ~/.aws/config
-  - cat ~/.aws/credentials
-  - cat ~/.aws/config
   - sudo apt-get install -y software-properties-common
   - sudo add-apt-repository -y ppa:deadsnakes/ppa
   - sudo apt-get update
@@ -35,7 +24,7 @@ before_install:
   - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   - unzip awscliv2.zip
   - sudo ./aws/install
-  - aws --version 
+  - aws --version
   - curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
   - sudo mv /tmp/eksctl /usr/local/bin
   - eksctl version
