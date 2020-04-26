@@ -26,11 +26,14 @@ before_install:
   - echo "output = json" >> ~/.aws/config
   - echo "region = $REGION" >> ~/.aws/config
   - sudo apt-get install -y software-properties-common
-  - sudo add-apt-repository -y ppa:deadsnakes/ppa
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/ppa
   - sudo apt-get update
-  - sudo apt-get install -y python3.6
+  - sudo apt-get install -y python3.7
   - sudo apt-get -y install python3-pip
-  - pip3 install awscli --upgrade
+  - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  - unzip awscliv2.zip
+  - sudo ./aws/install
+  - aws --version 
   - curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
   - sudo mv /tmp/eksctl /usr/local/bin
   - eksctl version
