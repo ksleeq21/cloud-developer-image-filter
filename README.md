@@ -14,9 +14,7 @@ A basic Ionic client web application which consumes the RestAPI Backend.
 
 #### S3 Bucket
 
-Create a bucket
-
-Set CORS configuration 
+Create a bucket for Media Bucket and set CORS configuration
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -35,11 +33,11 @@ Set CORS configuration
 
 #### PostgreSQL RDS Instance
 
-Create a PostgreSQL RDS Instance 
+Create a PostgreSQL RDS Instance
 
 Create SubnetGroup consists of two subnets if needed
 
-Create a Security Group for public access to port number 5432
+Create a Security Group for public access to port number `5432`
 
 #### EKS Cluster and Nodegroup
 
@@ -75,19 +73,18 @@ eksctl delete nodegroup --cluster image-filter-cluster --name my-workers
 eksctl delete cluster --name image-filter-cluster
 ```
 
-### Setup Docker Environment
-You'll need to install docker https://docs.docker.com/install/. Open a new terminal within the project directory and run:
+### Travis Pipeline 
 
-1. Build the images: `docker-compose -f docker-compose-build.yaml build --parallel`
-2. Push the images: `docker-compose -f docker-compose-build.yaml push`
-3. Run the container: `docker-compose up`
+In order to setup Travis CI/CD Pipeline refer to [Travis CI: Refer this tutorial to get started with Travis CI](https://docs.travis-ci.com/user/tutorial/)
 
-### Setup Travis CI/CD pipeline
+When a PR merge to `master` branch Travis Pipeline kicks in. The pipeline builds Docker images for feed, user, front, and reverseproxy and push to DockerHub.
 
-[Travis CI: Refer this tutorial to get started with Travis CI](https://docs.travis-ci.com/user/tutorial/)
+- [ksleeq21/udacity-front](https://hub.docker.com/repository/docker/ksleeq21/udacity-frontend)
+- [ksleeq21/udacity-restapi-feed](https://hub.docker.com/repository/docker/ksleeq21/udacity-restapi-feed)
+- [ksleeq21/udacity-restapi-user](https://hub.docker.com/repository/docker/ksleeq21/udacity-restapi-user)
+- [ksleeq21/reverseproxy](https://hub.docker.com/repository/docker/ksleeq21/reverseproxy)
 
-
-#### Set Environment Variables
+#### Travis Pipeline - Set Environment Variables
 
 ```
 AWS_ACCESS_KEY_ID
@@ -105,7 +102,7 @@ POSTGRESS_HOST
 USER_AUTH_JWT_SECRET
 ```
 
-### Setup Kubenetes 
+### Setup Kubenetes
 Containerize the application, create the Kubernetes resource, and deploy it to Kubenetes cluster:
 
 Create configMap and secret
@@ -142,3 +139,7 @@ Scale Up/Down
 kubectl scale deploy backend-feed --replicas 5
 kubectl scale deploy backend-user --replicas 3
 ```
+
+### Open application
+
+http://localhost:8100
