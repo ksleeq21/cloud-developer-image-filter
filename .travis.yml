@@ -7,7 +7,7 @@ services: docker
 env:
   - DOCKER_COMPOSE_VERSION=1.23.2
 
-install_prep:
+before_install:
   - docker -v && docker-compose -v
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -29,7 +29,6 @@ install_prep:
   - sudo mv /tmp/eksctl /usr/local/bin
   - eksctl version
 
-kubernetes_prep:
   - sed -i -e "s/ENV_CREDENTIALS/${BASE64_ENCODED_AWS_CREDENTIALS}/g" ./udacity-c3-deployment/k8s/aws-secret.yaml
   - sed -i -e "s/ENV_POSTGRESS_USERNAME/${BASE64_ENCODED_POSTGRESS_USERNAME}/g" ./udacity-c3-deployment/k8s/env-secret.yaml
   - sed -i -e "s/ENV_POSTGRESS_PASSWORD/${BASE64_ENCODED_POSTGRESS_PASSWORD}/g" ./udacity-c3-deployment/k8s/env-secret.yaml
@@ -40,10 +39,10 @@ kubernetes_prep:
   - sed -i -e "s/ENV_POSTGRESS_DB/${POSTGRESS_DB}/g" ./udacity-c3-deployment/k8s/env-configmap.yaml
   - sed -i -e "s/ENV_POSTGRESS_HOST/${POSTGRESS_HOST}/g" ./udacity-c3-deployment/k8s/env-configmap.yaml
 
-# docker_build:
+  
+# install:
 #   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 #   - docker-compose -f ./udacity-c3-deployment/docker/docker-compose-build.yaml build --parallel
 #   - docker images
 #   - docker-compose -f ./udacity-c3-deployment/docker/docker-compose-build.yaml push
 
-# kubernetes_deploy:
