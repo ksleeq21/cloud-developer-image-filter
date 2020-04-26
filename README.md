@@ -3,46 +3,56 @@
 Udagram is a simple cloud application developed alongside the Udacity Cloud Engineering Nanodegree. It allows users to register and log into a web client, post photos to the feed, and process photos using an image filtering microservice.
 
 The project is split into three parts:
-1. [The Simple Frontend](https://github.com/udacity/cloud-developer/tree/master/course-02/exercises/udacity-c2-frontend)
-A basic Ionic client web application which consumes the RestAPI Backend. [Covered in the course]
-2. [The RestAPI Backend](https://github.com/udacity/cloud-developer/tree/master/course-02/exercises/udacity-c2-restapi), a Node-Express server which can be deployed to a cloud service. [Covered in the course]
-3. [The Image Filtering Microservice](https://github.com/udacity/cloud-developer/tree/master/course-02/project/image-filter-starter-code), the final project for the course. It is a Node-Express application which runs a simple script to process images. [Your assignment]
+1. [The Simple Frontend](/udacity-c3-frontend)
+A basic Ionic client web application which consumes the RestAPI Backend. 
+2. [The RestAPI Feed Backend](/udacity-c3-restapi-feed), a Node-Express feed microservice.
+3. [The RestAPI User Backend](/udacity-c3-restapi-user), a Node-Express user microservice.
 
-## Tasks
+## Getting Setup
 
-### Setup Node Environment
+### Setup Docker Environment
+You'll need to install docker https://docs.docker.com/install/. Open a new terminal within the project directory and run:
 
-You'll need to create a new node server. Open a new terminal within the project directory and run:
+1. Build the images: `docker-compose -f docker-compose-build.yaml build --parallel`
+2. Push the images: `docker-compose -f docker-compose-build.yaml push`
+3. Run the container: `docker-compose up`
 
-1. Initialize a new project: `npm i`
-2. run the development server with `npm run dev`
+### Setup Kubenetes 
+Containerize the application, create the Kubernetes resource, and deploy it to Kubenetes cluster:
 
-### Create a new endpoint in the server.ts file
-
-The starter code has a task for you to complete an endpoint in `./src/server.ts` which uses query parameter to download an image from a public URL, filter the image, and return the result.
-
-We've included a few helper functions to handle some of these concepts and we're importing it for you at the top of the `./src/server.ts`  file.
-
-```typescript
-import {filterImageFromURL, deleteLocalFiles} from './util/util';
+1. Create configMap and secret
+```
+kubectl apply -f env-configmap.yaml
+kubectl apply -f env-secret.yaml
+kubectl apply -f aws-secret.yaml
+kubectl get configmap 
+kubectl get secret 
 ```
 
-### Deploying your system
+2. Create deployments
+```
+kubectl apply -f backend-feed-deployment.yaml
+kubectl apply -f backend-user-deployment.yaml
+kubectl apply -f frontend-deployment.yaml
+kubectl apply -f reverseproxy-deployment.yaml
+```
 
-Follow the process described in the course to `eb init` a new application and `eb create` a new environment to deploy your image-filter service! Don't forget you can use `eb deploy` to push changes.
+3. Create services
+```
+kubectl apply -f backend-feed-service.yaml
+kubectl apply -f backend-user-service.yaml
+kubectl apply -f frontend-service.yaml
+kubectl apply -f reverseproxy-service.yaml
+```
 
-## Stand Out (Optional)
+4. Set port forwarding
+```
+kubectl port-forward service/frontend 8100:8100
+kubectl port-forward service/reverseproxy 8080:8080
+```
 
-### Refactor the course RESTapi
-
-If you're feeling up to it, refactor the course RESTapi to make a request to your newly provisioned image server.
-
-### Authentication
-
-Prevent requests without valid authentication headers.
-> !!NOTE if you choose to submit this, make sure to add the token to the postman collection and export the postman collection file to your submission so we can review!
-
-### Custom Domain Name
-
-Add your own domain name and have it point to the running services (try adding a subdomain name to point to the processing server)
-> !NOTE: Domain names are not included in AWS’ free tier and will incur a cost.
+5. Scale Up/Down
+``` 
+kubectl scale deploy backend-feed --replicas 5
+kubectl scale deploy backend-user --replicas 3
+```
