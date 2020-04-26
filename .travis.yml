@@ -13,9 +13,11 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
+  
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
   - chmod +x ./kubectl
   - sudo mv ./kubectl /usr/local/bin/kubectl
+  
   - sudo apt-get install -y software-properties-common
   - sudo add-apt-repository -y ppa:deadsnakes/ppa
   - sudo apt-get update
@@ -25,6 +27,7 @@ before_install:
   - unzip awscliv2.zip
   - sudo ./aws/install
   - aws --version
+  
   - curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
   - sudo mv /tmp/eksctl /usr/local/bin
   - eksctl version
@@ -40,9 +43,36 @@ before_install:
   - sed -i -e "s/ENV_POSTGRESS_HOST/${POSTGRESS_HOST}/g" ./udacity-c3-deployment/k8s/env-configmap.yaml
 
   
-# install:
-#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-#   - docker-compose -f ./udacity-c3-deployment/docker/docker-compose-build.yaml build --parallel
-#   - docker images
-#   - docker-compose -f ./udacity-c3-deployment/docker/docker-compose-build.yaml push
+install:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker-compose -f ./udacity-c3-deployment/docker/docker-compose-build.yaml build --parallel
+  - docker images
+  - docker-compose -f ./udacity-c3-deployment/docker/docker-compose-build.yaml push
+
+  - kubectl apply -f env-configmap.yaml
+  - kubectl apply -f env-secret.yaml
+  - kubectl apply -f aws-secret.yaml
+
+  - kubectl get configmap 
+  - kubectl get secret 
+
+  - kubectl apply -f backend-feed-deployment.yaml
+  - kubectl apply -f backend-user-deployment.yaml
+  - kubectl apply -f frontend-deployment.yaml
+  - kubectl apply -f reverseproxy-deployment.yaml
+
+  - kubectl apply -f backend-feed-service.yaml
+  - kubectl apply -f backend-user-service.yaml
+  - kubectl apply -f frontend-service.yaml
+  - kubectl apply -f reverseproxy-service.yaml
+
+  # - kubectl scale deploy backend-feed --replicas 1
+  # - kubectl scale deploy backend-user --replicas 1
+
+  - kubectl get deploy
+  - kubectl get svc
+  - kubectl get pods
+
+  - kubectl port-forward service/frontend 8100:8100 &
+  - kubectl port-forward service/reverseproxy 8080:8080 &
 
