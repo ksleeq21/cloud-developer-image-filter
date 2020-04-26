@@ -7,7 +7,7 @@ services: docker
 env:
   - DOCKER_COMPOSE_VERSION=1.23.2
 
-before_install:
+install_prep:
   - docker -v && docker-compose -v
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -29,8 +29,21 @@ before_install:
   - sudo mv /tmp/eksctl /usr/local/bin
   - eksctl version
 
-install:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker-compose -f ./udacity-c3-deployment/docker/docker-compose-build.yaml build --parallel
-  - docker images
-  - docker-compose -f ./udacity-c3-deployment/docker/docker-compose-build.yaml push
+kubernetes_prep:
+  - sed -i -e "s/ENV_CREDENTIALS/${BASE64_ENCODED_AWS_CREDENTIALS}/g" ./udacity-c3-deployment/k8s/aws-secret.yaml
+  - sed -i -e "s/ENV_POSTGRESS_USERNAME/${BASE64_ENCODED_POSTGRESS_USERNAME}/g" ./udacity-c3-deployment/k8s/env-secret.yaml
+  - sed -i -e "s/ENV_POSTGRESS_PASSWORD/${BASE64_ENCODED_POSTGRESS_PASSWORD}/g" ./udacity-c3-deployment/k8s/env-secret.yaml
+  - sed -i -e "s/ENV_AWS_BUCKET/${AWS_MEDIA_BUCKET}/g" ./udacity-c3-deployment/k8s/env-configmap.yaml
+  - sed -i -e "s/ENV_AWS_PROFILE/${AWS_PROFILE}/g" ./udacity-c3-deployment/k8s/env-configmap.yaml
+  - sed -i -e "s/ENV_AWS_REGION/${AWS_DEFAULT_REGION}/g" ./udacity-c3-deployment/k8s/env-configmap.yaml
+  - sed -i -e "s/ENV_JWT_SECRET/${USER_AUTH_JWT_SECRET}/g" ./udacity-c3-deployment/k8s/env-configmap.yaml
+  - sed -i -e "s/ENV_POSTGRESS_DB/${POSTGRESS_DB}/g" ./udacity-c3-deployment/k8s/env-configmap.yaml
+  - sed -i -e "s/ENV_POSTGRESS_HOST/${POSTGRESS_HOST}/g" ./udacity-c3-deployment/k8s/env-configmap.yaml
+
+# docker_build:
+#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+#   - docker-compose -f ./udacity-c3-deployment/docker/docker-compose-build.yaml build --parallel
+#   - docker images
+#   - docker-compose -f ./udacity-c3-deployment/docker/docker-compose-build.yaml push
+
+# kubernetes_deploy:
