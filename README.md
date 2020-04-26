@@ -17,10 +17,61 @@ You'll need to install docker https://docs.docker.com/install/. Open a new termi
 2. Push the images: `docker-compose -f docker-compose-build.yaml push`
 3. Run the container: `docker-compose up`
 
+### Setup Travis CI/CD pipeline
+
+[Travis CI: Refer this tutorial to get started with Travis CI](https://docs.travis-ci.com/user/tutorial/)
+
+
+#### Set Environment Variables
+
+1. Set DOCKER_USERNAME, DOCKER_PASSWORD to push docker images to Docker Hub
+
+2. Set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION to execute `eksctl` commands
+
+#### Create SSH key pair for loggin to EC2 instances
+
+```
+ssh-keygen -m PEM
+```
+
+### Setup AWS EKS Kubernetes Cluster
+
+Create EKS Cluster
+
+```
+eksctl create cluster \
+ --name image-filter-cluster \
+ --region us-east-1 \
+ --without-nodegroup
+```
+
+Create EKS Nodegroup
+
+```
+eksctl create nodegroup \
+--cluster image-filter-cluster \
+--version auto \
+--name standard-workers \
+--node-type t3.medium \
+--nodes 3 \
+--nodes-min 1 \
+--nodes-max 4 \
+--ssh-access \
+--ssh-public-key /home/ubuntu/.ssh/id_rsa.pub \
+--managed
+```
+
+Delete EKS Cluster and Nodegroup
+
+```
+eksctl delete nodegroup --cluster image-filter-cluster --name standard-workers
+eksctl delete cluster --name image-filter-cluster
+```
+
 ### Setup Kubenetes 
 Containerize the application, create the Kubernetes resource, and deploy it to Kubenetes cluster:
 
-1. Create configMap and secret
+Create configMap and secret
 ```
 kubectl apply -f env-configmap.yaml
 kubectl apply -f env-secret.yaml
@@ -29,7 +80,7 @@ kubectl get configmap
 kubectl get secret 
 ```
 
-2. Create deployments
+Create deployments
 ```
 kubectl apply -f backend-feed-deployment.yaml
 kubectl apply -f backend-user-deployment.yaml
@@ -37,7 +88,7 @@ kubectl apply -f frontend-deployment.yaml
 kubectl apply -f reverseproxy-deployment.yaml
 ```
 
-3. Create services
+Create services
 ```
 kubectl apply -f backend-feed-service.yaml
 kubectl apply -f backend-user-service.yaml
@@ -45,13 +96,13 @@ kubectl apply -f frontend-service.yaml
 kubectl apply -f reverseproxy-service.yaml
 ```
 
-4. Set port forwarding
+Set port forwarding
 ```
 kubectl port-forward service/frontend 8100:8100
 kubectl port-forward service/reverseproxy 8080:8080
 ```
 
-5. Scale Up/Down
+Scale Up/Down
 ``` 
 kubectl scale deploy backend-feed --replicas 5
 kubectl scale deploy backend-user --replicas 3
