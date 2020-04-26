@@ -12,7 +12,7 @@ A basic Ionic client web application which consumes the RestAPI Backend.
 
 ### Setup AWS resources 
 
-#### S3
+#### S3 Bucket
 
 Create a bucket
 
@@ -33,7 +33,7 @@ Set CORS configuration
 </CORSConfiguration>
 ```
 
-#### RDS 
+#### PostgreSQL RDS Instance
 
 Create a PostgreSQL RDS Instance 
 
@@ -41,43 +41,7 @@ Create SubnetGroup consists of two subnets if needed
 
 Create a Security Group for public access to port number 5432
 
-### Setup Docker Environment
-You'll need to install docker https://docs.docker.com/install/. Open a new terminal within the project directory and run:
-
-1. Build the images: `docker-compose -f docker-compose-build.yaml build --parallel`
-2. Push the images: `docker-compose -f docker-compose-build.yaml push`
-3. Run the container: `docker-compose up`
-
-### Setup Travis CI/CD pipeline
-
-[Travis CI: Refer this tutorial to get started with Travis CI](https://docs.travis-ci.com/user/tutorial/)
-
-
-#### Set Environment Variables
-
-```
-AWS_ACCESS_KEY_ID
-AWS_DEFAULT_REGION
-AWS_MEDIA_BUCKET
-AWS_PROFILE
-AWS_SECRET_ACCESS_KEY
-BASE64_ENCODED_AWS_CREDENTIALS
-BASE64_ENCODED_POSTGRESS_PASSWORD
-BASE64_ENCODED_POSTGRESS_USERNAME
-DOCKER_PASSWORD
-DOCKER_USERNAME
-POSTGRESS_DB
-POSTGRESS_HOST
-USER_AUTH_JWT_SECRET
-```
-
-#### Create SSH key pair for loggin to EC2 instances
-
-```
-ssh-keygen -m PEM
-```
-
-### Setup AWS EKS Kubernetes Cluster
+#### EKS Cluster and Nodegroup
 
 Create EKS Cluster
 
@@ -111,6 +75,36 @@ eksctl delete nodegroup --cluster image-filter-cluster --name my-workers
 eksctl delete cluster --name image-filter-cluster
 ```
 
+### Setup Docker Environment
+You'll need to install docker https://docs.docker.com/install/. Open a new terminal within the project directory and run:
+
+1. Build the images: `docker-compose -f docker-compose-build.yaml build --parallel`
+2. Push the images: `docker-compose -f docker-compose-build.yaml push`
+3. Run the container: `docker-compose up`
+
+### Setup Travis CI/CD pipeline
+
+[Travis CI: Refer this tutorial to get started with Travis CI](https://docs.travis-ci.com/user/tutorial/)
+
+
+#### Set Environment Variables
+
+```
+AWS_ACCESS_KEY_ID
+AWS_DEFAULT_REGION
+AWS_MEDIA_BUCKET
+AWS_PROFILE
+AWS_SECRET_ACCESS_KEY
+BASE64_ENCODED_AWS_CREDENTIALS
+BASE64_ENCODED_POSTGRESS_PASSWORD
+BASE64_ENCODED_POSTGRESS_USERNAME
+DOCKER_PASSWORD
+DOCKER_USERNAME
+POSTGRESS_DB
+POSTGRESS_HOST
+USER_AUTH_JWT_SECRET
+```
+
 ### Setup Kubenetes 
 Containerize the application, create the Kubernetes resource, and deploy it to Kubenetes cluster:
 
@@ -119,8 +113,6 @@ Create configMap and secret
 kubectl apply -f env-configmap.yaml
 kubectl apply -f env-secret.yaml
 kubectl apply -f aws-secret.yaml
-kubectl get configmap 
-kubectl get secret 
 ```
 
 Create deployments
